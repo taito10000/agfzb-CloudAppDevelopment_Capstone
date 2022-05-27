@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: tk0101djangoapp
     routes:
-      - route: $HOST.$DOMAIN
+      - route: "taito0101IBMFinal.us-south.cf.appdomain.cloud"
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: tk0101djangoapp-nginx
     routes:
-      - route: $HOST.$DOMAIN/static
+      - route: "taito0101BMFinal.us-south.cf.appdomain.cloud"
     memory: 128M
     buildpack: staticfile_buildpack
