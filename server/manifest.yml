@@ -1,11 +1,11 @@
   applications:
-  - name: djangoapp
+  - name: tk0101djangoapp
     routes:
-      - route: "tk002IBMFinal.us-south.cf.appdomain.cloud"
+      - route: "taito0101IBMFinal.us-south.cf.appdomain.cloud"
     memory: 128M
     buildpack: python_buildpack
-  - name: djangoapp-nginx
+  - name: tk0101djangoapp-nginx
     routes:
-      - route: "tk002IBMFinal.us-south.cf.appdomain.cloud"
+      - route: "taito0101BMFinal.us-south.cf.appdomain.cloud"
     memory: 128M
     buildpack: staticfile_buildpack
