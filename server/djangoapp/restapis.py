@@ -85,7 +85,8 @@ def get_dealers_by_state(url, state):
 def get_dealer_by_id_from_cf(url, dealerId):
 # - Call get_request() with specified arguments
     results = []
-    json_result = get_request(url)
+    json_result = get_request(url, {dealerId: dealerId})
+#    json_result = get_request(url, dealerId=dealerId)
 
 # - Parse JSON results into a DealerView object list
     print(json_result)

@@ -108,6 +108,7 @@ def get_dealer_details(request, dealer_id):
     url = "https://us-south.functions.appdomain.cloud/api/v1/web/taito.kantomaa%40coreseer.com_dev2/ibm10final/getReviewsForDealer"
     
     dealers = get_dealer_by_id_from_cf(url, dealer_id)
+    
     print(dealers)
 
 
