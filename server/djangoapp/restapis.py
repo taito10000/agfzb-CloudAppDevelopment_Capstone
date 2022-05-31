@@ -42,6 +42,8 @@ def get_dealers_from_cf(url, **kwargs):
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result['dbs']['rows']
+        print("DEALERS: ")
+        print(dealers)
         # For each dealer object
         for dealer in dealers:
             # Get its content in `doc` object
@@ -55,13 +57,13 @@ def get_dealers_from_cf(url, **kwargs):
 
     return results
 
-def get_dealers_by_id(url, dealer_id):
+def get_dealers_by_state(url, state):
     results = []
     # Call get_request with a URL parameter
     
-    url = url + f'?{dealer_id}'
     
-    json_result = get_request(url)
+    
+    json_result = get_request(url, {"state": state})
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result['dbs']['rows']

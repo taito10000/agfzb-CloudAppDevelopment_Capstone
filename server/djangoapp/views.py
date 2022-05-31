@@ -10,7 +10,7 @@ from datetime import datetime
 import logging
 import json
 import requests
-from .models import CarDealer
+from .models import CarDealer, DealerReview
 from requests.auth import HTTPBasicAuth
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -84,15 +84,21 @@ def registration_request(request):
 
 # Update the `get_dealerships` view to render the index page with a list of dealerships
 def get_dealerships(request):
+    context = {}
     if request.method == "GET":
         url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
         # Get dealers from the URL
         dealerships = get_dealers_from_cf(url)
+        dealers = []
+        for d in dealerships: 
+            obj = CarDealer(d.address,d.city, d.full_name, d.id, d.lat, d.long, d.short_name, d.st, d.zip)
+            dealers.append(obj)
+        context['dealers'] = dealers
         # Concat all dealer's short name
-        dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
         # Return a list of dealer short name
-        return HttpResponse(dealer_names)
-
+        #return HttpResponse(dealer_names)
+        return render(request, 'djangoapp/index.html', context)
 
 
 
@@ -102,7 +108,7 @@ def get_dealer_details(request, dealer_id):
     url = "https://us-south.functions.appdomain.cloud/api/v1/web/taito.kantomaa%40coreseer.com_dev2/ibm10final/getReviewsForDealer"
     
     dealers = get_dealer_by_id_from_cf(url, dealer_id)
-
+    print(dealers)
 
 
 # Create a `add_review` view to submit a review

@@ -47,13 +47,30 @@
             </div>
 
         </nav> -->
-        {% include "nav.html" %}
+        
     <!-- Remove this line the first time you edit this file -->
-     Vaihdetaan index sivun tekstiä. Alkaako uusi push ibm?
+     
     <!--Add a nav bar here -->
-
+    {% include "./nav.html" %}
     <!--Add a dealer table here -->
-
+        <div>
+           <div class="card-deck">
+          {% for d in dealers %}
+           
+             <div class="card" style="min-width: 18rem"> 
+               
+                <div class="card-body">
+                    <h1 class="card-title">{{d.full_name}}</h1>
+                    <p class="card-text">{{d.address}}<p>
+                    <p class="card-text">{{d.city}}</p>
+                    <p class="card-text">{{d.zip}} {{d.st}}</p>
+                    <p class="card-text">Lat: {{d.lat}} Long: {{d.long}}</p>
+                    <p></p>
+                </div>
+             </div>
+           {% endfor %}
+            </div>
+        </div>
     </body>
 
 </html>
