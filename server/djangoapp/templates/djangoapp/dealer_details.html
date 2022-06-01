@@ -12,8 +12,8 @@
     <!--Add a nav bar here -->
         {% include "./nav.html" %}
     <!-- Add reviews as cards -->
-        {% for d in dealers %}
-        {{d.address}}
+        {% for r in reviews %}
+        {{r.name}}
         {% endfor %}
         
     </body>
