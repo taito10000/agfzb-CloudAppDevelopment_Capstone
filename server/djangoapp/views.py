@@ -105,7 +105,7 @@ def get_dealerships(request):
 
 # Create a `get_dealer_details` view to render the reviews of a dealer
 def get_dealer_details(request, dealer_id):
-    url = "https://us-south.functions.appdomain.cloud/api/v1/web/taito.kantomaa%40coreseer.com_dev2/ibm10final/getReviewsForDealer"
+    url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealer"
     context = {}
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
     
