@@ -19,7 +19,11 @@
         {% include "./nav.html" %}
     <!-- Add reviews as cards -->
         {% for r in reviews %}
-        {{r.name}}
+        <p>{{r.name}}</p>
+        <p>{{r.dealership}}</p>
+        <p>{{r.purchase}}</p>
+        <p>{{r.review}}</p>
+        <p>{{r.car_make}}</p>
         {% endfor %}
         
     </body>
