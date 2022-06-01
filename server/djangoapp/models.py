@@ -88,10 +88,10 @@ class DealerReview:
         self.purchase = purchase
         self.review = review
         self.purchase_date = purchase_date
-        self.car_make = car_make
+        self.car_make = car_make 
         self.car_model = car_model
         self.car_year = car_year
-        self.sentiment = sentiment
+        self.sentiment = sentiment 
         self.id = id
 
     def __str__(self):
