@@ -149,7 +149,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
                                     car_make = make,
                                     car_model=model,
                                     car_year=year,
-                                    sentiment=sentimnt
+                                    sentiment=snt
                     )   
                                     
                 #'purchase_date', r['car_make'], 'model4', '1998', 'senitment', 'id4')
@@ -169,19 +169,14 @@ def analyze_review_sentiments(text):
 # - Get the returned sentiment label such as Positive or Negative
     url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/c30575b5-bfcd-4fd4-b9c5-4ea2cbd5b0ad/v1/analyze"
     watsonapi = "IQZ5n7WJPIEstxVMMDOkGZozTPZmYPY2GrHGFeaYp7yr"
+    
     params = {
         'text': text,
-        'features': {
-            'entities':{
-                'sentiment': True
-                },
-            'keywords': {
-                'sentiment': True
-                }
-        
-        }
-    }
-    print(params)
-    resp = requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', watsonapi))
-    print(resp)
+        'version': '2020-08-01',
+        'features': 'sentiment',
+        'return_analyzed_text': True
 
+    }
+    resp = requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', watsonapi))
+    sent = resp.json()
+    return sent['sentiment']['document']['label']
