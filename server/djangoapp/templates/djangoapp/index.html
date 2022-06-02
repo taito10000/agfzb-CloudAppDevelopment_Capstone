@@ -54,27 +54,40 @@
     {% include "./nav.html" %}
     <!--Add a dealer table here -->
         <div class="container">
-           <div class="card-deck">
-          {% for d in dealers %}
+            <table class="table" id="table" data-filter-control="true">
            
-             <div class="card border-secondary mb-3" style="min-width: 16rem"> 
-               
+                <thead>
+                    <tr>
+                        <th data-field="id">ID</th>
+                        <th data-field="full_name">Dealer Name</th>
+                        <th data-field="city">City</th>
+                        <th data-field="address">Address</th>
+                        <th data-field="zip">Zip</th>
+                        <th data-field="st" data-filter-control="select">State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in dealers %}
                 
-                    <div class="card-header">
-                      <h5 class="card-title">{{d.full_name}}</h5>
-                    </div>
-                    <div class="card-body">
-                    <p class="card-text">{{d.address}}<p>
-                    <p class="card-text">{{d.city}}</p>
-                    <p class="card-text">{{d.zip}} {{d.st}}</p>
-                    <p class="card-text">Lat: {{d.lat}} Long: {{d.long}}</p>
+                  <tr> 
                     
-                    <p></p>
-                </div>
-             </div>
-           {% endfor %}
+                     <td>{{d.id}}</td>
+                     <td><a href="{% url 'djangoapp:dealer_details' d.id %}">{{d.full_name}}</a></td>
+                     <td>{{d.city}}</td>
+                     <td>{{d.address}}</td>
+                     <td>{{d.zip}}</td>
+                     <td>{{d.st}}</td>
+                        
+                  </tr>
+                {% endfor %}
+                 </tbody>
+                </table>
             </div>
-        </div>
-    </body>
+        </body>
+        <script>
+            $(function(){
+                $('#table').bootstrapTable()
 
+            })
+        </script>
 </html>

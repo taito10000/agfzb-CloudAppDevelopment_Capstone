@@ -110,6 +110,8 @@ def get_dealer_details(request, dealer_id):
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
     print(dealer_id)
     print(reviews)
+    context['MEDIA_URL'] = "../../../static"
+    
     context['reviews'] = reviews
     return render(request, 'djangoapp/dealer_details.html', context)
 # Create a `add_review` view to submit a review
@@ -120,27 +122,31 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id):
 
     context = {}
-    if request.user.is_authenticated:
-        url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
-        review = {
-            'time': datetime.utcnow().isoformat(),
-            'dealership': dealer_id,
-            'review': "Test review"
-        }
-        
-        json_payload = {
-            'review': review
-        }
-        
-        resp = post_request(url, json_payload, dealerId=dealer_id)
-        print(resp.json())
-        print(request.user)
-        return render(request, 'djangoapp/add_review.html', context)
     
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
+            review = {
+                'time': datetime.utcnow().isoformat(),
+                'dealership': dealer_id,
+                'review': "Test review"
+            }
+        
+            json_payload = {
+                'review': review
+            }
+        
+            resp = post_request(url, json_payload, dealerId=dealer_id)
+            print(resp.json())
+            print(request.user)
+            return render(request, 'djangoapp/add_review.html', context)
     
+    elif request.method == 'GET':
+        print(dealer_id)
+        return render(request, 'djangoapp/add_review.html', context )
     else:
         print("NO USER")
-        return render(request,'djangoapp/index.html', context)
+        return render(request,'djangoapp/dealer_details.html', context)
     #if user:
     #    print("Auth ok!")
     #else: 
