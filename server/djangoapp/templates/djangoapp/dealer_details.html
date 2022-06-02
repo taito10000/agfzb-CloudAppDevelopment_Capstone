@@ -18,12 +18,28 @@
     <!--Add a nav bar here -->
         {% include "./nav.html" %}
     <!-- Add reviews as cards -->
-        {% for r in reviews %}
-        <p>{{r.name}}</p>
-        <p>{{r.dealership}}</p>
-        <p>{{r.purchase}}</p>
-        <p>{{r.review}}</p>
-        <p>{{r.car_make}}</p>
+        
+        
+        <div class="container">
+            <div class="card-deck">
+           {% for r in reviews %}
+            
+              <div class="card border-secondary mb-3" style="min-width: 16rem"> 
+                
+                 
+                     <div class="card-header">
+                       <h5 class="card-title">{{r.name}}</h5>
+                     </div>
+                     <div class="card-body">
+                     <p class="card-text">Dealer: {{r.dealership}}<p>
+                     <p class="card-text">{{r.car_make}} {{r.car_model}} ({{r.car_year}})</p>
+                     <p class="card-text"></p>
+                     <p class="card-text">Review: {{r.review}}</p>
+                     <p class="card-text">{{r.sentiment}}</p>
+                     
+                     <p></p>
+                 </div>
+              </div>
         {% endfor %}
         
     </body>

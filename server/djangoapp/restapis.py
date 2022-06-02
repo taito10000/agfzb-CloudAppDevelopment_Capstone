@@ -138,7 +138,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
                 if 'car_year' in r:
                     year = r['car_year']
                 
-                
+                snt = analyze_review_sentiments(r['review'])
                 
                 obj = DealerReview(dealership=r['dealership'], 
                                     name=r['name'], 
@@ -154,15 +154,6 @@ def get_dealer_reviews_from_cf(url, dealerId):
                                     
                 #'purchase_date', r['car_make'], 'model4', '1998', 'senitment', 'id4')
                 results.append(obj)
-            
-            
-            
-            # Create a CarDealer object with values in `doc` object
-            #review_obj = DealerReview(dealership=r['dealership'], name=r['name'], purchase=r['purchase'], review=r['review'], purchase_date='date', car_make=r['car_make'], car_model=r['car_model'], car_year=r['car_year'], sentiment='sentiment', id=r['id'])
-            
-            #results.append(review_obj)
-            
-    
     return results
 
 
@@ -173,9 +164,24 @@ def get_dealer_reviews_from_cf(url, dealerId):
 
 
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
-# def analyze_review_sentiments(text):
+def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
 # - Get the returned sentiment label such as Positive or Negative
-
-
+    url = "https://api.eu-gb.natural-language-understanding.watson.cloud.ibm.com/instances/c30575b5-bfcd-4fd4-b9c5-4ea2cbd5b0ad/v1/analyze"
+    watsonapi = "IQZ5n7WJPIEstxVMMDOkGZozTPZmYPY2GrHGFeaYp7yr"
+    params = {
+        'text': text,
+        'features': {
+            'entities':{
+                'sentiment': True
+                },
+            'keywords': {
+                'sentiment': True
+                }
+        
+        }
+    }
+    print(params)
+    resp = requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', watsonapi))
+    print(resp)
 
