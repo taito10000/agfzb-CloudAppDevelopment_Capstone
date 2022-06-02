@@ -32,6 +32,16 @@ def get_request(url, **kwargs):
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)
 
+def post_request(url, json_payload, **kwargs):
+    try:
+        response = requests.post(url, params=kwargs, json=json_payload)
+    except:
+        print('Netwoek error')
+        status_code = response.status_code
+        print("status code: ", status_code)
+    return response.json()
+
+
 
 # Create a get_dealers_from_cf method to get dealers from a cloud function
 # def get_dealers_from_cf(url, **kwargs):
@@ -157,12 +167,6 @@ def get_dealer_reviews_from_cf(url, dealerId):
     return results
 
 
-
-
-
-
-
-
 # Create an `analyze_review_sentiments` method to call Watson NLU and analyze text
 def analyze_review_sentiments(text):
 # - Call get_request() with specified arguments
@@ -180,3 +184,7 @@ def analyze_review_sentiments(text):
     resp = requests.get(url, params=params, headers={'Content-Type': 'application/json'}, auth=HTTPBasicAuth('apikey', watsonapi))
     sent = resp.json()
     return sent['sentiment']['document']['label']
+
+
+
+
