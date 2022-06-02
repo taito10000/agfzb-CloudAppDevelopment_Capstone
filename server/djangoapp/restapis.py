@@ -14,15 +14,17 @@ def get_request(url, **kwargs):
     
     try:
         # Call get method of requests library with URL and parameters
-        response = requests.get(url, headers={'Content-Type': 'application/json'},
+        response = requests.get(url, headers={'Content-Type': 'application/json', 'User-Agent': 'Test'},
                                     params=kwargs)
     except:
         # If any error occurs
         print("Network exception occurred")
     status_code = response.status_code
     print("With status {} ".format(status_code))
+    json_d = response.json()
     json_data = json.loads(response.text)
-    return json_data
+    
+    return json_d
 
 
 
@@ -78,14 +80,14 @@ def get_dealers_by_state(url, state):
 
     return results
 
-def get_dealer_by_id_from_cf(url, dealerId):
+def get_dealer_by_id_from_cf(url, dealer_id):
 # - Call get_request() with specified arguments
     results = []
-    json_result = get_request(url, {dealerId: dealerId})
-#    json_result = get_request(url, dealerId=dealerId)
+#    json_result = get_request(url, {dealerId: dealer_id})
+    json_result = get_request(url, dealerId=dealer_id)
 
 # - Parse JSON results into a DealerView object list
-    print(json_result)
+    print("PERKAUS")
     if json_result:
         # Get the row list in JSON as dealers
         dealers = json_result
@@ -112,7 +114,7 @@ def get_dealer_reviews_from_cf(url, dealerId):
     
     json_result = get_request(url, dealerId=dealerId)
     
-    print(json_result)
+    print("PERKAUS")
     if json_result:
         # Get the row list in JSON as dealers
         reviews = json_result['dbs']
@@ -120,12 +122,46 @@ def get_dealer_reviews_from_cf(url, dealerId):
         for rev in reviews:
             # Get its content in `doc` object
             r = rev["doc"]
-            print(r['name'])
+            if r['dealership'] == dealerId:
+                pd = None
+                model = None
+                make = None
+                year = None
+                sentimnt = None
+                
+                if 'purchase_date' in r:
+                    pd = r['purchase_date']
+                if 'car_make' in r:
+                    make = r['car_make']
+                if 'car_model' in r:
+                    model = r['car_model']
+                if 'car_year' in r:
+                    year = r['car_year']
+                
+                
+                
+                obj = DealerReview(dealership=r['dealership'], 
+                                    name=r['name'], 
+                                    purchase=r['purchase'], 
+                                    review=r['review'], 
+                                    id=r['id'],
+                                    purchase_date=pd,
+                                    car_make = make,
+                                    car_model=model,
+                                    car_year=year,
+                                    sentiment=sentimnt
+                    )   
+                                    
+                #'purchase_date', r['car_make'], 'model4', '1998', 'senitment', 'id4')
+                results.append(obj)
+            
+            
+            
             # Create a CarDealer object with values in `doc` object
             #review_obj = DealerReview(dealership=r['dealership'], name=r['name'], purchase=r['purchase'], review=r['review'], purchase_date='date', car_make=r['car_make'], car_model=r['car_model'], car_year=r['car_year'], sentiment='sentiment', id=r['id'])
-            obj = DealerReview(r['dealership'], r['name'], r['purchase'], r['review'], 'purchase_date', r['car_make'], 'model4', '1998', 'senitment', 'id4')
+            
             #results.append(review_obj)
-            results.append(obj)
+            
     
     return results
 

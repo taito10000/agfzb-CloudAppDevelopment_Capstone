@@ -108,7 +108,7 @@ def get_dealer_details(request, dealer_id):
     url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealer"
     context = {}
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
-    
+    print(dealer_id)
     print(reviews)
     context['reviews'] = reviews
     return render(request, 'djangoapp/dealer_details.html', context)
