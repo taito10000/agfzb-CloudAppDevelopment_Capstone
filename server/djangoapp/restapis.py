@@ -34,12 +34,13 @@ def get_request(url, **kwargs):
 
 def post_request(url, json_payload, **kwargs):
     try:
-        response = requests.post(url, params=kwargs, json=json_payload)
+        response = requests.post(url, headers={"Content-Type": "application/json"}, params=kwargs, json=json_payload)
     except:
         print('Netwoek error')
         status_code = response.status_code
         print("status code: ", status_code)
-    return response.json()
+    
+    return response
 
 
 

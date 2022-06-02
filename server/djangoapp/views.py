@@ -121,7 +121,7 @@ def add_review(request, dealer_id):
 
     context = {}
     if request.user.is_authenticated:
-        url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealer"
+        url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
         review = {
             'time': datetime.utcnow().isoformat(),
             'dealership': dealer_id,
@@ -133,7 +133,7 @@ def add_review(request, dealer_id):
         }
         
         resp = post_request(url, json_payload, dealerId=dealer_id)
-        print(resp)
+        print(resp.json())
         print(request.user)
         return render(request, 'djangoapp/add_review.html', context)
     
