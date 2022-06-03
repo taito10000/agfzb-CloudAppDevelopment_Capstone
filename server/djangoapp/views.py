@@ -10,7 +10,7 @@ from datetime import datetime
 import logging
 import json
 import requests
-from .models import CarDealer, DealerReview
+from .models import CarDealer, DealerReview, CarMake, CarModel
 from requests.auth import HTTPBasicAuth
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
@@ -109,8 +109,8 @@ def get_dealer_details(request, dealer_id):
     context = {}
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
     print(dealer_id)
-    print(reviews)
-    context['MEDIA_URL'] = "../../../static"
+    
+    
     
     context['reviews'] = reviews
     return render(request, 'djangoapp/dealer_details.html', context)
@@ -143,6 +143,15 @@ def add_review(request, dealer_id):
     
     elif request.method == 'GET':
         print(dealer_id)
+        #dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealerid"
+        dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+        cars = CarModel.objects.all()
+        dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+        
+        context['dealer_name'] = dealer.full_name
+        context['cars'] = cars
+        print(cars)
+        
         return render(request, 'djangoapp/add_review.html', context )
     else:
         print("NO USER")

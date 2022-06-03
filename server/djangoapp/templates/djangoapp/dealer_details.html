@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Dealership Review</title>
     {% load static %}
+    
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
@@ -66,11 +67,13 @@
                      
                       <div class="card-header"> 
                         {% if r.sentiment == "positive" %}  
-                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/positive.png">
+                        <img class="card-img-left" style="max-height: 3rem" src="{{ MEDIA_URL}}/emoji/positive.png">
+                        
                         {% elif r.sentiment == "neutral" %}
-                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/neutral.png">
+                        <img class="card-img-left" style="max-height: 3rem" src="{{MEDIA_URL}}/emoji/neutral.png">
+                        
                         {% else %}
-                        <img class="card-img-left" src="{{MEDIA_URL}}/emoji/negative.png">
+                        <img class="card-img-left" style="max-height: 3rem" src="{{MEDIA_URL}}/emoji/negative.png">
                         {% endif %}
                       </div>
                      
