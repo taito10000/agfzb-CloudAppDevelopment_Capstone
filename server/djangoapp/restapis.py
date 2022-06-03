@@ -27,7 +27,10 @@ def get_request(url, **kwargs):
     return json_d
 
 
-
+def reviewcount(url, **kwargs):
+    result = get_request(url)
+    
+    return result['doc_count']
 
 # Create a `post_request` to make HTTP POST requests
 # e.g., response = requests.post(url, params=kwargs, json=payload)

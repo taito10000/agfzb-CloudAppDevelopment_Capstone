@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-from .restapis import get_dealers_from_cf, get_request, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request
+from .restapis import get_dealers_from_cf, get_request, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request, reviewcount
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
@@ -128,6 +128,9 @@ def add_review(request, dealer_id):
     context['dealer_name'] = dealer.full_name
     cars = CarModel.objects.all()
     context['cars'] = cars
+    r_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/doccount"
+    r_count = reviewcount(r_url)
+    print(r_count)
     
     
     if request.method == 'POST':
@@ -145,6 +148,7 @@ def add_review(request, dealer_id):
             
             url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
             review = {
+                'id': r_count + 1,
                 'time': datetime.utcnow().isoformat(),
                 'dealership': dealer_id,
                 'name': dealer.full_name,
