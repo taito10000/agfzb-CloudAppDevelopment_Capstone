@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="csrf_token" content="{{ csrf_token }}">
     {% load static %}
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
@@ -17,8 +18,9 @@
     <body>
     {% include "./nav.html" %}
         <form action="#" method="POST">
+            {% csrf_token %}
             <div class="container mt-3">
-            <h5>Add a review about {{dealer_name}}</h5>
+            <h5>Add a review about  <em>{{dealer_name}}</em></h5>
             
             <label for="content">Enter the review content: </label>
             <textarea class="form-control" id="content" name="content" rows="2" required>

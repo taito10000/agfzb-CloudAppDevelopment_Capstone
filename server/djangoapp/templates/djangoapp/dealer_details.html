@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    
     <title>Dealership Review</title>
     {% load static %}
     
@@ -58,8 +59,8 @@
     <!-- Add reviews as cards -->
         
         
-        <div class="container mt-3">
-            <p>Reviews for </p>
+        <div class="container mt-4">
+            <p>Reviews for <em>{{dealer_name}}</em></p>
              <div class="card-columns">  
             {% for r in reviews %}
             
@@ -78,9 +79,11 @@
                       </div>
                      
                      <div class="card-body">
+                     {% if r.car_make  %}
                      <h5 class="card-title">{{r.car_make}} {{r.car_model}}</h5>
                      <p class="card-text">({{r.car_year}})<p>
-                     <p class="card-text">{{r.review}}</p>
+                    {% endif %} 
+                    <p class="card-text">{{r.review}}</p>
                      
                      
                      <p></p>

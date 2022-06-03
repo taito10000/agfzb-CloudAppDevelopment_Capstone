@@ -108,11 +108,12 @@ def get_dealer_details(request, dealer_id):
     url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealer"
     context = {}
     reviews = get_dealer_reviews_from_cf(url, dealer_id)
-    print(dealer_id)
     
-    
-    
+    dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+    dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+    context['dealer_name'] = dealer.full_name
     context['reviews'] = reviews
+
     return render(request, 'djangoapp/dealer_details.html', context)
 # Create a `add_review` view to submit a review
 
@@ -122,37 +123,53 @@ def get_dealer_details(request, dealer_id):
 def add_review(request, dealer_id):
 
     context = {}
+    dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+    dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+    context['dealer_name'] = dealer.full_name
+    cars = CarModel.objects.all()
+    context['cars'] = cars
+    
     
     if request.method == 'POST':
         if request.user.is_authenticated:
+            car = int(request.POST['car'])-1
+            carmake = cars[car].carMake.name
+            carmodel = cars[car].name
+            caryear = cars[car].year.strftime("%Y")
+            purch = False
+            try:
+                if request.POST['purchasecheck']:
+                    purch = True
+            except:
+                purch = False
+            
             url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
             review = {
                 'time': datetime.utcnow().isoformat(),
                 'dealership': dealer_id,
-                'review': "Test review"
+                'name': dealer.full_name,
+                'purchase': purch,
+                'review': request.POST['content'],
+                'purchase_date': request.POST['purchasedate'],
+                'car_make': carmake,
+                'car_model': carmodel,
+                'car_year': caryear
             }
         
             json_payload = {
                 'review': review
             }
-        
             resp = post_request(url, json_payload, dealerId=dealer_id)
             print(resp.json())
-            print(request.user)
+           
             return render(request, 'djangoapp/add_review.html', context)
     
     elif request.method == 'GET':
         print(dealer_id)
         #dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealerid"
-        dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
-        cars = CarModel.objects.all()
-        dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
-        
-        context['dealer_name'] = dealer.full_name
-        context['cars'] = cars
-        print(cars)
-        
+    
         return render(request, 'djangoapp/add_review.html', context )
+    
     else:
         print("NO USER")
         return render(request,'djangoapp/dealer_details.html', context)
