@@ -166,7 +166,7 @@ def add_review(request, dealer_id):
             resp = post_request(url, json_payload, dealerId=dealer_id)
             print(resp.json())
            
-            return render(request, 'djangoapp/add_review.html', context)
+            return redirect("djangoapp:index")
     
     elif request.method == 'GET':
         print(dealer_id)
