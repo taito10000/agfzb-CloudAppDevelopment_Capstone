@@ -3,13 +3,15 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.shortcuts import get_object_or_404, render, redirect
 # from .models import related models
-# from .restapis import related methods
+from .restapis import get_dealers_from_cf, get_request, get_dealer_by_id_from_cf, get_dealer_reviews_from_cf, post_request, reviewcount
 from django.contrib.auth import login, logout, authenticate
 from django.contrib import messages
 from datetime import datetime
 import logging
 import json
-
+import requests
+from .models import CarDealer, DealerReview, CarMake, CarModel
+from requests.auth import HTTPBasicAuth
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
@@ -84,14 +86,100 @@ def registration_request(request):
 def get_dealerships(request):
     context = {}
     if request.method == "GET":
+        url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+        # Get dealers from the URL
+        dealerships = get_dealers_from_cf(url)
+        dealers = []
+        for d in dealerships: 
+            obj = CarDealer(d.address,d.city, d.full_name, d.id, d.lat, d.long, d.short_name, d.st, d.zip)
+            dealers.append(obj)
+        context['dealers'] = dealers
+        # Concat all dealer's short name
+        # dealer_names = ' '.join([dealer.short_name for dealer in dealerships])
+        # Return a list of dealer short name
+        #return HttpResponse(dealer_names)
         return render(request, 'djangoapp/index.html', context)
 
 
+
+
 # Create a `get_dealer_details` view to render the reviews of a dealer
-# def get_dealer_details(request, dealer_id):
-# ...
+def get_dealer_details(request, dealer_id):
+    url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealer"
+    context = {}
+    reviews = get_dealer_reviews_from_cf(url, dealer_id)
+    
+    dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+    dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+    context['dealer_name'] = dealer.full_name
+    context['reviews'] = reviews
 
+    return render(request, 'djangoapp/dealer_details.html', context)
 # Create a `add_review` view to submit a review
-# def add_review(request, dealer_id):
-# ...
 
+
+
+
+def add_review(request, dealer_id):
+
+    context = {}
+    dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealership"
+    dealer = get_dealer_by_id_from_cf(dealer_url, dealer_id)
+    context['dealer_name'] = dealer.full_name
+    cars = CarModel.objects.all()
+    context['cars'] = cars
+    r_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/doccount"
+    r_count = reviewcount(r_url)
+    print(r_count)
+    
+    
+    if request.method == 'POST':
+        if request.user.is_authenticated:
+            car = int(request.POST['car'])-1
+            carmake = cars[car].carMake.name
+            carmodel = cars[car].name
+            caryear = cars[car].year.strftime("%Y")
+            purch = False
+            try:
+                if request.POST['purchasecheck']:
+                    purch = True
+            except:
+                purch = False
+            
+            url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/review"
+            review = {
+                'id': r_count + 1,
+                'time': datetime.utcnow().isoformat(),
+                'dealership': dealer_id,
+                'name': dealer.full_name,
+                'purchase': purch,
+                'review': request.POST['content'],
+                'purchase_date': request.POST['purchasedate'],
+                'car_make': carmake,
+                'car_model': carmodel,
+                'car_year': caryear
+            }
+        
+            json_payload = {
+                'review': review
+            }
+            resp = post_request(url, json_payload, dealerId=dealer_id)
+            print(resp.json())
+           
+            #return redirect("djangoapp:index")
+            return redirect("djangoapp:dealer_details", dealer_id=dealer_id)
+    
+    elif request.method == 'GET':
+        print(dealer_id)
+        #dealer_url = "https://608f2dc9.us-south.apigw.appdomain.cloud/ibmcapstone/dealerid"
+    
+        return render(request, 'djangoapp/add_review.html', context )
+    
+    else:
+        print("NO USER")
+        return render(request,'djangoapp/dealer_details.html', context)
+    #if user:
+    #    print("Auth ok!")
+    #else: 
+    #    print("Auth not ok")
+    

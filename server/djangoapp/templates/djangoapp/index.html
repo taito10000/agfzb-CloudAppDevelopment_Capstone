@@ -14,7 +14,7 @@
 </head>
 
     <body>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+       <!-- <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                <ul class="navbar-nav">
                 <li class="nav-item">
@@ -46,13 +46,48 @@
             </ul>
             </div>
 
-        </nav>
+        </nav> -->
+        
     <!-- Remove this line the first time you edit this file -->
-     Vaihdetaan index sivun tekstiä. Alkaako uusi push ibm?
+     
     <!--Add a nav bar here -->
-
+    {% include "./nav.html" %}
     <!--Add a dealer table here -->
+        <div class="container">
+            <table class="table" id="table" data-filter-control="true">
+           
+                <thead>
+                    <tr>
+                        <th data-field="id">ID</th>
+                        <th data-field="full_name">Dealer Name</th>
+                        <th data-field="city">City</th>
+                        <th data-field="address">Address</th>
+                        <th data-field="zip">Zip</th>
+                        <th data-field="st" data-filter-control="select">State</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in dealers %}
+                
+                  <tr> 
+                    
+                     <td>{{d.id}}</td>
+                     <td><a href="{% url 'djangoapp:dealer_details' d.id %}">{{d.full_name}}</a></td>
+                     <td>{{d.city}}</td>
+                     <td>{{d.address}}</td>
+                     <td>{{d.zip}}</td>
+                     <td>{{d.st}}</td>
+                        
+                  </tr>
+                {% endfor %}
+                 </tbody>
+                </table>
+            </div>
+        </body>
+        <script>
+            $(function(){
+                $('#table').bootstrapTable()
 
-    </body>
-
+            })
+        </script>
 </html>
